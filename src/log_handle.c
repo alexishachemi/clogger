@@ -91,7 +91,7 @@ void write_log(logger_t *logger, log_level_t level, const char *f, ...)
         return;
     va_start(args, f);
     written = sprintf(line, "%s%s", level_str, SEP);
-    vsprintf(line + written, f, args);
+    vsnprintf(line + written, LOG_SIZE - written, f, args);
     va_end(args);
     fwrite(line, strlen(line), 1, logger->fs);
     fwrite("\n", 1, 1, logger->fs);
