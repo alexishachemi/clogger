@@ -1,0 +1,6 @@
+*.o
+tmp/
+*.gc*
+*clogger*
+.vscode/
+*.log
