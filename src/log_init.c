@@ -20,7 +20,7 @@ bool logger_init(logger_t *logger, const char *path)
     return logger->fs != NULL;
 }
 
-void deinit_logger(logger_t *logger)
+void logger_deinit(logger_t *logger)
 {
     if (logger && logger->fs) {
         fclose(logger->fs);

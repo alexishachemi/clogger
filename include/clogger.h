@@ -26,7 +26,7 @@
 /// @param ... arguments to the format string
 /// @note Does nothing if lptr is NULL.
 /// @note Does nothing if the log level of lptr is higher than lvl.
-#define LOG(lptr, lvl, f...) write_log(lptr, lvl, LOG_META SEP f)
+#define LOG(lptr, lvl, f...) logger_log(lptr, lvl, LOG_META SEP f)
 
 typedef enum {
     DEBUG = 0,
@@ -56,7 +56,13 @@ bool logger_init(logger_t *logger, const char *path);
 
 /// @brief Deinitializes the logger.
 /// @param logger logger to deinitialize
-void deinit_logger(logger_t *logger);
+void logger_deinit(logger_t *logger);
+
+/// @brief Set the log level of a logger.
+/// @param logger logger to set the log level of
+/// @param level log level
+/// @return true if the operation was succesful, false otherwise
+bool logger_set_level(logger_t *logger, log_level_t level);
 
 /// @brief Get the string representation of a log level.
 /// @param level log level
@@ -64,12 +70,6 @@ void deinit_logger(logger_t *logger);
 /// LOG_LEVEL_SIZE bytes long.
 /// @return true if the operation was succesful, false otherwise
 bool get_log_level_str(log_level_t level, char *buf);
-
-/// @brief Set the log level of a logger.
-/// @param logger logger to set the log level of
-/// @param level log level
-/// @return true if the operation was succesful, false otherwise
-bool set_log_level(logger_t *logger, log_level_t level);
 
 /// @brief Clears the file at `path` if it is longer than LOG_MAX_LINES.
 /// @param path path to the log file, if invalid, the function is a no-op
@@ -84,4 +84,4 @@ void trim_log_file(const char *path);
 /// @param ... arguments to the format string
 /// @note Does nothing if lptr is NULL.
 /// @note Does nothing if the log level of lptr is higher than lvl.
-void write_log(logger_t *logger, log_level_t level, const char *f, ...);
+void logger_log(logger_t *logger, log_level_t level, const char *f, ...);

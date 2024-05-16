@@ -14,6 +14,6 @@ int main(void)
     if (!logger_init(&logger, "test.log"))
         return 84;
     LOG(&logger, WARN, "Hello, world!");
-    deinit_logger(&logger);
+    logger_deinit(&logger);
     return 0;
 }

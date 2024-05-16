@@ -65,7 +65,7 @@ bool get_log_level_str(log_level_t level, char *buf)
     return false;
 }
 
-bool set_log_level(logger_t *logger, log_level_t level)
+bool logger_set_level(logger_t *logger, log_level_t level)
 {
     char level_str[LOG_LEVEL_SIZE];
 
@@ -78,7 +78,7 @@ bool set_log_level(logger_t *logger, log_level_t level)
     return true;
 }
 
-void write_log(logger_t *logger, log_level_t level, const char *f, ...)
+void logger_log(logger_t *logger, log_level_t level, const char *f, ...)
 {
     char line[LOG_SIZE];
     char level_str[LOG_LEVEL_SIZE];
