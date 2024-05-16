@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
 #define LOG_SIZE 2048
 #define EXPAND(m) #m
@@ -28,6 +29,30 @@
 /// @note Does nothing if the log level of lptr is higher than lvl.
 #define LOG(lptr, lvl, f...) logger_log(lptr, lvl, LOG_META SEP f)
 
+/// @brief Behaves like LOG but always returns true.
+/// @param lptr logger pointer
+/// @param lvl log level
+/// @param f format string
+/// @param ... arguments to the format string
+/// @return true
+#define LOG_TRUE(lptr, lvl, f...) logger_log_true(lptr, lvl, LOG_META SEP f)
+
+/// @brief Behaves like LOG but always returns false.
+/// @param lptr logger pointer
+/// @param lvl log level
+/// @param f format string
+/// @param ... arguments to the format string
+/// @return false
+#define LOG_FALSE(lptr, lvl, f...) logger_log_false(lptr, lvl, LOG_META SEP f)
+
+/// @brief Behaves like LOG but always returns NULL.
+/// @param lptr logger pointer
+/// @param lvl log level
+/// @param f format string
+/// @param ... arguments to the format string
+/// @return NULL
+#define LOG_NULL(lptr, lvl, f...) logger_log_null(lptr, lvl, LOG_META SEP f)
+
 typedef enum {
     DEBUG = 0,
     INFO = 1,
@@ -46,30 +71,29 @@ typedef struct {
     log_level_t level;
 } logger_t;
 
-
 /// @brief Initializes the logger. This function must be called even if
 /// the logger is disabled.
-/// @param logger logger to initialize
+/// @param l logger to initialize
 /// @param path path to the log file, if NULL the logger will be disabled
 /// @return true if the logger was successfully initialized, false otherwise
-bool logger_init(logger_t *logger, const char *path);
+bool logger_init(logger_t *l, const char *path);
 
 /// @brief Deinitializes the logger.
-/// @param logger logger to deinitialize
-void logger_deinit(logger_t *logger);
+/// @param l logger to deinitialize
+void logger_deinit(logger_t *l);
 
 /// @brief Set the log level of a logger.
-/// @param logger logger to set the log level of
+/// @param l logger to set the log level of
 /// @param level log level
 /// @return true if the operation was succesful, false otherwise
-bool logger_set_level(logger_t *logger, log_level_t level);
+bool logger_set_level(logger_t *l, log_level_t lvl);
 
 /// @brief Get the string representation of a log level.
 /// @param level log level
 /// @param buf buffer to store the string representation. Must be at least
 /// LOG_LEVEL_SIZE bytes long.
 /// @return true if the operation was succesful, false otherwise
-bool get_log_level_str(log_level_t level, char *buf);
+bool get_log_level_str(log_level_t lvl, char *buf);
 
 /// @brief Clears the file at `path` if it is longer than LOG_MAX_LINES.
 /// @param path path to the log file, if invalid, the function is a no-op
@@ -78,10 +102,45 @@ void trim_log_file(const char *path);
 /// @brief Writes a log message to the logger using printf-style formatting.
 /// Use this function directtly if you want to write log messages without
 /// metadata or have your own metadata format. Otherwise, prefer the LOG macro.
-/// @param logger the logger to write to
+/// @param l the logger to write to
+/// @param level log level
+/// @param f format string
+/// @param args arguments to the format string
+/// @note Does nothing if lptr is NULL.
+/// @note Does nothing if the log level of lptr is higher than lvl.
+void logger_va_log(logger_t *l, log_level_t lvl, const char *f, va_list args);
+
+/// @brief Writes a log message to the logger using printf-style formatting.
+/// Use this function directtly if you want to write log messages without
+/// metadata or have your own metadata format. Otherwise, prefer the LOG macro.
+/// @param l the logger to write to
 /// @param level log level
 /// @param f format string
 /// @param ... arguments to the format string
 /// @note Does nothing if lptr is NULL.
 /// @note Does nothing if the log level of lptr is higher than lvl.
-void logger_log(logger_t *logger, log_level_t level, const char *f, ...);
+void logger_log(logger_t *l, log_level_t lvl, const char *f, ...);
+
+/// @brief Behaves like logger_log but always returns true.
+/// @param l the logger to write to
+/// @param level log level
+/// @param f format string
+/// @param ... arguments to the format string
+/// @return true
+bool logger_log_true(logger_t *l, log_level_t lvl, const char *f, ...);
+
+/// @brief Behaves like logger_log but always returns false.
+/// @param l the logger to write to
+/// @param level log level
+/// @param f format string
+/// @param ... arguments to the format string
+/// @return false
+bool logger_log_false(logger_t *l, log_level_t lvl, const char *f, ...);
+
+/// @brief Behaves like logger_log but always returns NULL.
+/// @param l the logger to write to
+/// @param level log level
+/// @param f format string
+/// @param ... arguments to the format string
+/// @return NULL
+void *logger_log_null(logger_t *l, log_level_t lvl, const char *f, ...);

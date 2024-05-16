@@ -5,7 +5,6 @@
 ** logging functions & utils
 */
 
-#include <stdarg.h>
 #include <string.h>
 #include "clogger.h"
 
@@ -76,24 +75,4 @@ bool logger_set_level(logger_t *logger, log_level_t level)
     LOG(logger, INFO, "Log level set to %s", level_str);
     logger->level = level;
     return true;
-}
-
-void logger_log(logger_t *logger, log_level_t level, const char *f, ...)
-{
-    char line[LOG_SIZE];
-    char level_str[LOG_LEVEL_SIZE];
-    size_t written = 0;
-    va_list args;
-
-    if (!logger || !logger->fs || level < logger->level || !f)
-        return;
-    if (!get_log_level_str(level, level_str))
-        return;
-    va_start(args, f);
-    written = sprintf(line, "%s%s", level_str, SEP);
-    vsnprintf(line + written, LOG_SIZE - written, f, args);
-    va_end(args);
-    fwrite(line, strlen(line), 1, logger->fs);
-    fwrite("\n", 1, 1, logger->fs);
-    fflush(logger->fs);
 }
