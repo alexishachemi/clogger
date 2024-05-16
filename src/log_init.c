@@ -7,25 +7,17 @@
 
 #include "clogger.h"
 
-bool init_enabled_logger(logger_t *logger, const char *path)
-{
-    if (!logger || !path)
-        return false;
-    trim_log_file(path);
-    logger->fs = fopen(path, "a");
-    if (!logger->fs)
-        return false;
-    logger->level = INFO;
-    return true;
-}
-
-bool init_disabled_logger(logger_t *logger)
+bool logger_init(logger_t *logger, const char *path)
 {
     if (!logger)
         return false;
-    logger->fs = NULL;
     logger->level = INFO;
-    return true;
+    logger->fs = NULL;
+    if (!path)
+        return true;
+    trim_log_file(path);
+    logger->fs = fopen(path, "a");
+    return logger->fs != NULL;
 }
 
 void deinit_logger(logger_t *logger)

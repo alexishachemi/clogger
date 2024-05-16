@@ -4,3 +4,4 @@ tmp/
 *clogger*
 .vscode/
 *.log
+!clogger.h
