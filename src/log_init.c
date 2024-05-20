@@ -7,17 +7,22 @@
 
 #include "clogger.h"
 
-bool logger_init(logger_t *logger, const char *path)
+bool logger_init(logger_t *l, const char *path, bool clear_file)
 {
-    if (!logger)
+    if (!l)
         return false;
-    logger->level = INFO;
-    logger->fs = NULL;
+    l->level = INFO;
+    l->fs = NULL;
     if (!path)
         return true;
+    if (clear_file) {
+        l->fs = fopen(path, "w");
+        if (l->fs)
+            fclose(l->fs);
+    }
     trim_log_file(path);
-    logger->fs = fopen(path, "a");
-    return logger->fs != NULL;
+    l->fs = fopen(path, "a");
+    return l->fs != NULL;
 }
 
 void logger_deinit(logger_t *logger)

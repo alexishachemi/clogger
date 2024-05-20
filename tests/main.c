@@ -11,7 +11,7 @@ int main(void)
 {
     logger_t logger;
 
-    if (!logger_init(&logger, "test.log"))
+    if (!logger_init(&logger, "test.log", true))
         return 84;
     LOG(&logger, WARN, "Hello, world!");
     logger_deinit(&logger);

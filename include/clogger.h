@@ -75,8 +75,9 @@ typedef struct {
 /// the logger is disabled.
 /// @param l logger to initialize
 /// @param path path to the log file, if NULL the logger will be disabled
+/// @param clear_file wether to clear the file at `path` before logging
 /// @return true if the logger was successfully initialized, false otherwise
-bool logger_init(logger_t *l, const char *path);
+bool logger_init(logger_t *l, const char *path, bool clear_file);
 
 /// @brief Deinitializes the logger.
 /// @param l logger to deinitialize
