@@ -43,10 +43,10 @@ int main(void)
 {
     logger_t logger;
 
-    if (!init_enabled_logger(&logger, "test.log"))
-        return 1;
+    if (!logger_init(&logger, "test.log", true))
+        return 84;
     LOG(&logger, INFO, "Hello, world!");
-    deinit_logger(&logger);
+    logger_deinit(&logger);
     return 0;
 }
 ```
