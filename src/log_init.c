@@ -5,14 +5,17 @@
 ** initializing functions
 */
 
+#include <string.h>
 #include "clogger.h"
 
-bool logger_init(logger_t *l, const char *path, bool clear_file)
+bool logger_init(logger_t *l, const char *path,
+    bool clear_file, FILE *os)
 {
     if (!l)
         return false;
+    memset(l, 0, sizeof(logger_t));
     l->level = INFO;
-    l->fs = NULL;
+    l->os = os;
     if (!path)
         return true;
     if (clear_file) {
@@ -25,10 +28,12 @@ bool logger_init(logger_t *l, const char *path, bool clear_file)
     return l->fs != NULL;
 }
 
-void logger_deinit(logger_t *logger)
+void logger_deinit(logger_t *l)
 {
-    if (logger && logger->fs) {
-        fclose(logger->fs);
-        logger->fs = NULL;
+    if (l && l->fs) {
+        fclose(l->fs);
+        l->fs = NULL;
     }
+    if (l)
+        l->os = NULL;
 }

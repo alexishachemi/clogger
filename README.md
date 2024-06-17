@@ -43,12 +43,13 @@ int main(void)
 {
     logger_t logger;
 
-    if (!logger_init(&logger, "test.log", true))
+    if (!logger_init(&logger, NULL, true, stdout))
         return 84;
-    LOG(&logger, INFO, "Hello, world!");
+    LOG(&logger, WARN, "Hello, world!");
     logger_deinit(&logger);
     return 0;
 }
+
 ```
 
 Logging uses the `vsnprintf` function so it is compatible with the [printf format identifiers](https://cplusplus.com/reference/cstdio/printf/). The maximum length of a log line is set by `LOG_SIZE` (see [clogger.h](include/clogger.h))
@@ -59,10 +60,10 @@ You also need to add the library to the linker when compiling:
 gcc myfile.c -lclogger
 ```
 
-Running the code will create a file named `test.log` containing the following line:
+Running the code will print a similar line on the standard output:
 
 ```log
 INFO - May 14 2024 13:48:21 - tests/main.c:16 - Hello, world!
 ```
 
-The file is emptied every `LOG_MAX_LINES` lines.
+When logging into a file, if the file has more than `LOG_MAX_LINES` lines, is is cleared first.

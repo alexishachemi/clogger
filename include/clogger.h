@@ -17,7 +17,7 @@
 #define LOG_MAX_LINES 100
 #define LOG_LEVEL_SIZE 9
 #define SEP " - "
-#define LOG_META __DATE__ " "  __TIME__ SEP __FILE__":"STRINGIFY(__LINE__)
+#define LOG_META __DATE__ " "  __TIME__ SEP __FILE__ ":" STRINGIFY(__LINE__)
 
 /// @brief Convenience macro for writing log messages using printf-style
 /// formatting. Includes metadata.
@@ -68,16 +68,23 @@ typedef struct {
 
 typedef struct {
     FILE *fs;
+    FILE *os;
     log_level_t level;
 } logger_t;
 
-/// @brief Initializes the logger. This function must be called even if
-/// the logger is disabled.
-/// @param l logger to initialize
-/// @param path path to the log file, if NULL the logger will be disabled
-/// @param clear_file wether to clear the file at `path` before logging
-/// @return true if the logger was successfully initialized, false otherwise
-bool logger_init(logger_t *l, const char *path, bool clear_file);
+/// @brief Initializes the logger. This function must be called even if the
+/// logger is disabled. If a path is specified, the file is created if it does
+/// not exists. If a file with the same name already exists, it is overriden.
+/// If nothing is specified, the logger is disabled.
+/// @param l logger to setup.
+/// @param path path to the log file, if NULL no log is written to a file.
+/// @param clear_file wether to clear the file at `path` before logging.
+/// @param os file stream to directly write to, if NULL, no stream is set.
+/// Setting both `path` and `os` allows to log in a file and in an output
+/// stream at the same time.
+/// @return true if the logger was successfully setup, false otherwise.
+bool logger_init(logger_t *l, const char *path,
+    bool clear_file, FILE *os);
 
 /// @brief Deinitializes the logger.
 /// @param l logger to deinitialize

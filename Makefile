@@ -9,13 +9,13 @@ NAME	=	clogger
 
 LIB		=	lib${NAME}.a
 
-INC		=	include/clogger.h
+INC		=	clogger.h
 
 CC		=	gcc
 
 TMPDIR	=	tmp
 
-INST_BIN_DIR	=	/usr/local/lib/
+INST_BIN_DIR	=	/usr/local/lib
 
 INST_INC_DIR	=	/usr/local/include
 
@@ -46,7 +46,7 @@ all: $(LIB)
 
 install:	$(LIB)
 	sudo cp $(LIB) $(INST_BIN_DIR)
-	sudo cp $(INC) $(INST_INC_DIR)
+	sudo cp include/$(INC) $(INST_INC_DIR)
 	sudo ldconfig
 
 uninstall:
